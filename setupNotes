@@ -1,0 +1,182 @@
+Steps to create user and add to sudo in debian:
+sudo su - root #be a root user
+adduser <user_name>
+..follow prompts..
+#add to sudoers group
+usermod -aG sudo <user_name>
+
+#Verify user and sudoers from root
+su - <user_name>
+tail -1 /etc/passwd #Verify username is there
+sudo su - root #should be root now
+exit
+
+#create a private/public key pair and upload public key to Digital ocean droplet
+#From your laptop:
+ssh-keygen -t rsa -b 4096 -C "<your id>" #Generate keys <your id> can be anything
+#accept default (it will store in ~/.ssh/id_rsa and id_rsa.pub
+
+#Now the difficult part:
+#Normally the ssh via password may be disabled (you need to put your public ssh_key on the server)
+#This is very difficult to do using the console. So enable password authentication, upload your ssh_key
+#and then disable password authentication.
+From account => open console
+nano /etc/ssh/sshd_config
+#uncomment #PasswordAuthentication yes 
+#save (ctrl-shift-x and follow prompts)
+#restart the ssh service
+sudo service ssh restart
+
+From your laptop you should be able to ssh in with password
+1. If your laptop has ssh-copy-id, use that to upload the id_rsa.pub
+
+2. check out ssh with key, by :
+ssh <user>@<droplet_ip>
+You should be logged in without having to use the password.
+
+3. Remember to comment out PasswordAuthentication yes in /etc/ssh/sshd_config
+
+
+Installing python 3:
+#script
+sudo apt-get update
+sudo apt-get -y upgrade
+
+#The OS is Debian, which does not have the latest python in the repo (to get via apt-get)
+#So we have to use the tarball from this site (https://www.python.org/ftp/python/)
+#script
+
+export pyMajorVersion=3.6
+export pyMinorVersion=6
+export pyVersion=${pyMajorVersion}.${pyMinorVersion}
+#prerequisites
+sudo apt-get install build-essential checkinstall
+sudo apt-get install libreadline-gplv2-dev  libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+#get tarball into /usr/src
+cd /usr/src
+sudo wget https://www.python.org/ftp/python/${pyVersion}/Python-${pyVersion}.tgz
+sudo tar -xzvf Python-${pyVersion}.tgz
+#compile
+cd Python-${pyVersion}
+sudo ./configure --enable-optimizations
+sudo make altinstall #prevent replacing default /usr/bin/python
+
+#check
+python${pyMajorVersion} -V
+pip${pyMajorVersion} -V
+
+#This installs in /usr/local/bin
+which python${pyMajorVersion}
+which pip${pyMajorVersion}
+
+#make this default
+cd /usr/bin
+sudo rm python #points to python2.7 normally
+sudo ln -s /usr/local/bin/python${pyMajorVersion} /usr/bin/python
+sudo ln -s /usr/local/bin/pip${pyMajorVersion} /usr/bin/pip
+
+#install git,sox,nginx
+sudo apt-get install git
+sudo apt-get install sox #sound exchange
+sudo apt-get install nginx
+#nginx is installed in /usr/sbin
+echo "use /usr/sbin/nginx to execute nginx.."
+
+#install ipython, sanic
+sudo pip install ipython
+sudo pip install sanic
+
+#get stuff from the github repo (upload your public there to get it via git)
+cd <your git directory: ~/git>
+
+git clone https://github.com/arjunvasan/core.git
+git clone https://github.com/arjunvasan/core.git
+git clone https://github.com/arjunvasan/menus.git
+git clone https://github.com/arjunvasan/kea.git
+git clone https://github.com/arjunvasan/tts.git
+
+
+#install redis
+cd /usr/src
+sudo wget http://download.redis.io/redis-stable.tar.gz
+sudo tar xvzf redis-stable.tar.gz
+cd redis-stable
+sudo make install
+
+#Test redis and respond to its advice:
+redis-server
+#This starts the server and has advice like this:
+26653:M 12 Oct 18:34:37.596 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+26653:M 12 Oct 18:34:37.596 # Server initialized
+26653:M 12 Oct 18:34:37.596 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+26653:M 12 Oct 18:34:37.596 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled
+#Remember to setup redis config (it runs on default config otherwise - very good info here: https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-redis-on-ubuntu-16-04)
+#Briefly
+sudo mkdir -p /etc/redis
+sudo cp /usr/src/redis-stable/redis.conf /etc/redis
+sudo su - root
+vi /etc/redis/redis.conf
+-- Change 'supervised no' to 'supervised systemd' Note: Create the redis systemd Unit as below
+-- Change 'dir ./' to '/var/lib/redis'
+:wq #close the file
+#create the systemd file (remain as root)
+vi /etc/systemd/system/redis.service #like this:
+cat /etc/systemd/system/redis.service
+============ start of file ============
+[Unit]
+Description=Redis In-Memory Data Store
+After=network.target
+
+[Service]
+User=redis
+Group=redis
+ExecStart=/usr/local/bin/redis-server /etc/redis/redis.conf
+ExecStop=/usr/local/bin/redis-cli shutdown
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+==========end of file=========
+#create the redis user and group (same name)
+sudo adduser --system --group --no-create-home redis
+#create the redis datadump directory (referred to earlier) and give permissions
+sudo mkdir /var/lib/redis
+sudo chown redis:redis /var/lib/redis
+sudo chmod 770 /var/lib/redis
+
+#test redist by start,status,stop
+sudo systemctl start redis
+sudo systemctl status redis #verify active
+sudo systemctl stop redis
+sudo systemctl status redis #verify inactive
+
+#check using redis-cli (first start redis or make sure it is running)
+redis-cli #automatically connects to 127.0.0.1:6379
+ping #should get a PONG response.
+set test "Redis is up"
+get test #should get "Redis is up"
+exit #exit to shell
+
+
+
+
+
+#for default config setup the database saving area
+sudo chmod o+r,o+w,o+x /usr/src/redis-stable
+
+#enable Redis to start at Boot
+sudo systemctl enable redis
+
+
+#install python packages
+sudo install tornado
+
+#install google speech, nexmo
+sudo pip install --upgrade google-api-python-client
+sudo pip install nexmo
+
+#install pyin
+
+
+
