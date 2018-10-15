@@ -89,12 +89,24 @@ sudo pip install sanic
 #get stuff from the github repo (upload your public there to get it via git)
 cd <your git directory: ~/git>
 
-git clone https://github.com/arjunvasan/core.git
+If you uploaded your key:
+git clone git@github.com:arjunvasan/core.git
+git clone git@github.com:arjunvasan/menus.git
+git clone git@github.com:arjunvasan/kea.git
+git clone git@github.com:arjunvasan/tts.git
+
+or via https:
+
 git clone https://github.com/arjunvasan/core.git
 git clone https://github.com/arjunvasan/menus.git
 git clone https://github.com/arjunvasan/kea.git
 git clone https://github.com/arjunvasan/tts.git
 
+or
+git clone -b VV --single-branch https://github.com/arjunvasan/kea.git --depth 1
+git clone -b VV --single-branch https://github.com/arjunvasan/menus.git --depth 1
+git clone -b VV --single-branch https://github.com/arjunvasan/core.git --depth 1
+git clone -b VV --single-branch https://github.com/arjunvasan/tts.git --depth 1
 
 #install redis
 cd /usr/src
@@ -177,6 +189,12 @@ sudo pip install --upgrade google-api-python-client
 sudo pip install nexmo
 
 #install pyin
+
+
+#Steps to create a branch:
+1. In githup just put in a branch in the branch dropdown of the repo.
+#check out the branch
+git clone -b <branch> --single-branch <url> --depth <number of commits> #keep number of commits low (1 if you just want the latest)
 
 
 
