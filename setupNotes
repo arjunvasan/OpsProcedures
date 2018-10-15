@@ -82,6 +82,14 @@ sudo apt-get install nginx
 #nginx is installed in /usr/sbin
 echo "use /usr/sbin/nginx to execute nginx.."
 
+#configure nginx
+#checkout or archive the git into ~/git, remove sites-enabled default and make it the sites-enabled as follows:
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s ~/git/OpsProcedures/nginx/nginx.conf /etc/nginx/sites-enabled/keaIvr
+#test the nginx
+nginx -s reload
+curl localhost:80/nginxStatus #Should show 'kea is up!'
+
 #install ipython, sanic
 sudo pip install ipython
 sudo pip install sanic
