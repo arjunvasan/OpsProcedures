@@ -89,7 +89,7 @@ sudo rm /etc/nginx/sites-enabled/default /etc/nginx/sites-enabled/keaIvr
 sudo ln -s ${userHome}/git/OpsProcedures/nginx/nginxKeacore.conf /etc/nginx/sites-enabled/keaIvr
 #test the nginx
 sudo nginx -s reload
-curl localhost:80/nginxstatus #Should show 'kea is up!'
+curl localhost:80/status #Should show 'kea is up!'
 
 #install ipython, sanic
 sudo pip install ipython
@@ -190,11 +190,28 @@ sudo chmod o+r,o+w,o+x /usr/src/redis-stable
 sudo systemctl enable redis
 
 
-#install python packages
+#install python packages (all installed with sudo, so is available in all environments)
 sudo install tornado
+sudo pip install python-dateutil
+sudo pip install arrow
+sudo pip install redis
+sudo pip3 install --upgrade google-cloud-speech
+sudo pip3 install --upgrade google-cloud
+sudo pip3 install --upgrade google-cloud-language
+
+#not sure if the below are needed (may be needed in python2.7)ls
+sudo pip3 install -t lib/ --upgrade google-api-python-client
+sudo pip3 install -t lib/ --upgrade google-cloud
+sudo pip3 install --upgrade google-cloud-texttospeech
+sudo pip3 install --upgrade webrtcvad
+sudo pip3 install --upgrade aioredis
+
+#copy google licenses/keys (were in /root/google)
+cred.json
+maps.key
 
 #install google speech, nexmo
-sudo pip install --upgrade google-api-python-client
+sudo pip3 install --upgrade google-api-python-client
 sudo pip install nexmo
 
 #install pyin
@@ -205,5 +222,18 @@ sudo pip install nexmo
 #check out the branch
 git clone -b <branch> --single-branch <url> --depth <number of commits> #keep number of commits low (1 if you just want the latest)
 
+#Steps to run the application
+#Notes:
+1. The code has to be organized into packages: main => core,kea,tts,menus. The globals should be moved into main
+Before doing that here is the code to run the application:
+cd ~/git
+rm -rf core kea tts menus
+git clone -b VV --single-branch https://github.com/arjunvasan/core.git --depth 1
+git clone -b VV --single-branch https://github.com/arjunvasan/kea.git --depth 1
+git clone -b VV --single-branch https://github.com/arjunvasan/tts.git --depth 1
+git clone -b VV --single-branch https://github.com/arjunvasan/menus.git --depth 1
+cd core
+export PYTHONPATH=~/git/core:~/git/menus:~/git/kea:~/git/tts:~/git
+python app.py
 
 
