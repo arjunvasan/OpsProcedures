@@ -205,6 +205,7 @@ sudo pip3 install -t lib/ --upgrade google-cloud
 sudo pip3 install --upgrade google-cloud-texttospeech
 sudo pip3 install --upgrade webrtcvad
 sudo pip3 install --upgrade aioredis
+sudo pip3 install jose #some package for signing!
 
 #copy google licenses/keys (were in /root/google)
 cred.json
