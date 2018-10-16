@@ -232,7 +232,7 @@ git clone -b VV --single-branch https://github.com/arjunvasan/core.git --depth 1
 git clone -b VV --single-branch https://github.com/arjunvasan/kea.git --depth 1
 git clone -b VV --single-branch https://github.com/arjunvasan/tts.git --depth 1
 git clone -b VV --single-branch https://github.com/arjunvasan/menus.git --depth 1
-cd core
+cd ~/git/core
 export PYTHONPATH=~/git/core:~/git/menus:~/git/kea:~/git/tts:~/git
 python app.py
 
