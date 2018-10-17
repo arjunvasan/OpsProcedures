@@ -208,6 +208,7 @@ sudo pip3 install --upgrade aioredis
 sudo pip3 install jose #some package for signing!
 sudp pip3 install crypto #not sure if this is needed
 sudo pip3 install pycrypto
+sudo pip3 install python-jose
 ##############bug #####################
 ##Note jose has a bug in print (2.7) and we are using 3. Fixed line
   File "/usr/local/lib/python3.6/site-packages/jose.py", line 546
@@ -240,6 +241,10 @@ redis-cli #invoke the client
 HSET kea.store-config:16502636176 query "false"
 HSET kea.store-config:16502636176 playback "true"
 HGETALL kea.store-config:16502636176
+#Miscellaneous
+#For storing recordings
+mkdir -p  '/home/vv/audio/rx'
+
 #Notes:
 1. The code has to be organized into packages: main => core,kea,tts,menus. The globals should be moved into main
 Before doing that here is the code to run the application:
@@ -253,4 +258,7 @@ cd ~/git/core
 export PYTHONPATH=~/git/core:~/git/menus:~/git/kea:~/git/tts:~/git
 python app.py
 
+########### need to work on these ####################
+/var/www/html/nxrx => kea.py
+/var/www/html/tts/tts... =>tts.py (something seems to be recorded here)
 
