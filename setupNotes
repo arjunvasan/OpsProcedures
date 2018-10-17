@@ -258,6 +258,42 @@ cd ~/git/core
 export PYTHONPATH=~/git/core:~/git/menus:~/git/kea:~/git/tts:~/git
 python app.py
 
+########### systemd for keaivr (this app) ###########
+1. create the /etc/systemd/system/keaivr.service as:
+$ cat /etc/systemd/system/keaivr.service
+[Unit]
+Description=Kea Ivr sanic app
+After=network.target
+
+[Service]
+User=vv
+Group=vv
+ExecStart=/home/vv/git/core/start.sh
+Type=simple
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+2. create and make executable the script /home/vv/git/core/start.sh as:
+$ cat /home/vv/git/core/start.sh
+#!/usr/bin/env bash
+cd ~/git/core
+export PYTHONPATH=~/git/core:~/git/menus:~/git/kea:~/git/tts:~/git
+python app.py
+
+3. add user vv to the 'systemd-journal' to see journals without sudo:
+sudo usermod -a -G systemd-journal vv
+
+4. To see log of keaivr for last 1 hour:
+$ journalctl -u keaivr --until "1 hour ago"ps
+
+5. To tail the log:
+journalctl -f -u keaivr
+
+########### end systemd for keaivr (this app) ###########
+
+
 ########### need to work on these ####################
 /var/www/html/nxrx => kea.py
 /var/www/html/tts/tts... =>tts.py (something seems to be recorded here)
