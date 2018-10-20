@@ -1,0 +1,96 @@
+1. File seems to be opened for read before creation:
+
+Oct 17 04:41:03 kea-core start.sh[30879]: 04:41:03.739 INFO:
+Oct 17 04:41:04 kea-core start.sh[30879]: sox FAIL formats: can't open input file `/home/vv/audio/rx/pizza-inn.16502636176.15624482878.9.wav': WAVE: RIFF header not found
+Oct 17 04:41:05 kea-core start.sh[30879]: [IVR]: __init__(key=8377e20b-216b-48f8-8c5a-10182d8181e7,caller=None,menu_key=pizza-inn,store=)
+Oct 17 04:41:05 kea-core start.sh[30879]: [UTIL.save_rx]:  https://api.nexmo.com/v1/files/1d2c030b-208a-415a-9030-b4c77e599e27
+Oct 17 04:41:05 kea-core start.sh[30879]: [UTIL.save_rx]: posted to AWS b'{"status":"error","message":"Can not find store related to forwarding number"}'
+Oct 17 04:41:05 kea-core start.sh[30879]: [APP.nx_rx]: Recording: /home/vv/audio/rx/pizza-inn.16502636176.15624482878.9.wav
+Oct 17 04:41:05 kea-core start.sh[30879]: [2018-10-16 21:41:05 -0700] - (sanic.access)[INFO][174.36.197.202:60755]: POST http://138.197.214.202:8005/nx/rx/8377e20b-216b-48f8-8c5a-10182d8181e7  200 20
+
+2. With no call at all, this loop occurs:
+Notes: Appears to keep waiting for 'that it' .. even though the call has hung up!  This appears to be due to the ws still being open after the call has hung up
+
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0 ## core/app.py
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> LOOP FINISHED
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream ENDED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.call_ctrl]: TTS -> b'GOOGLE_RESTART'
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: __init__
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: metadata.InteractionType -> VOICE_SEARCH
+Oct 18 05:20:04 kea-core start.sh[9285]: [IVR._context]: From items ['thats it', 'delivery', 'im done', 'thats all', 'nope', 'no', 'complete', 'this is it', 'thats all', 'exit', 'thats good', 'be all', 'no thank you', 'no thanks', 'that is it', 'that is all', 'you got it', 'that would be all', 'that will be all', 'thatll be all', 'thatll be it', 'all done', 'im finished', 'nope', 'nothing else', 'will be it']
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream STARTED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> LOOP FINISHED
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream ENDED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.call_ctrl]: TTS -> b'GOOGLE_RESTART'
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: __init__
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: metadata.InteractionType -> VOICE_SEARCH
+Oct 18 05:20:04 kea-core start.sh[9285]: [IVR._context]: From items ['thats it', 'delivery', 'im done', 'thats all', 'nope', 'no', 'complete', 'this is it', 'thats all', 'exit', 'thats good', 'be all', 'no thank you', 'no thanks', 'that is it', 'that is all', 'you got it', 'that would be all', 'that will be all', 'thatll be all', 'thatll be it', 'all done', 'im finished', 'nope', 'nothing else', 'will be it']
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream STARTED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> LOOP FINISHED
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream ENDED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.call_ctrl]: TTS -> b'GOOGLE_RESTART'
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: __init__
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: metadata.InteractionType -> VOICE_SEARCH
+Oct 18 05:20:04 kea-core start.sh[9285]: [IVR._context]: From items ['thats it', 'delivery', 'im done', 'thats all', 'nope', 'no', 'complete', 'this is it', 'thats all', 'exit', 'thats good', 'be all', 'no thank you', 'no thanks', 'that is it', 'that is all', 'you got it', 'that would be all', 'that will be all', 'thatll be all', 'thatll be it', 'all done', 'im finished', 'nope', 'nothing else', 'will be it']
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream STARTED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> LOOP FINISHED
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream ENDED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.call_ctrl]: TTS -> b'GOOGLE_RESTART'
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: __init__
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: metadata.InteractionType -> VOICE_SEARCH
+Oct 18 05:20:04 kea-core start.sh[9285]: [IVR._context]: From items ['thats it', 'delivery', 'im done', 'thats all', 'nope', 'no', 'complete', 'this is it', 'thats all', 'exit', 'thats good', 'be all', 'no thank you', 'no thanks', 'that is it', 'that is all', 'you got it', 'that would be all', 'that will be all', 'thatll be all', 'thatll be it', 'all done', 'im finished', 'nope', 'nothing else', 'will be it']
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream STARTED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> LOOP FINISHED
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream ENDED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.call_ctrl]: TTS -> b'GOOGLE_RESTART'
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: __init__
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: metadata.InteractionType -> VOICE_SEARCH
+Oct 18 05:20:04 kea-core start.sh[9285]: [IVR._context]: From items ['thats it', 'delivery', 'im done', 'thats all', 'nope', 'no', 'complete', 'this is it', 'thats all', 'exit', 'thats good', 'be all', 'no thank you', 'no thanks', 'that is it', 'that is all', 'you got it', 'that would be all', 'that will be all', 'thatll be all', 'thatll be it', 'all done', 'im finished', 'nope', 'nothing else', 'will be it']
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream STARTED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> LOOP FINISHED
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream ENDED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.call_ctrl]: TTS -> b'GOOGLE_RESTART'
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: __init__
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: metadata.InteractionType -> VOICE_SEARCH
+Oct 18 05:20:04 kea-core start.sh[9285]: [IVR._context]: From items ['thats it', 'delivery', 'im done', 'thats all', 'nope', 'no', 'complete', 'this is it', 'thats all', 'exit', 'thats good', 'be all', 'no thank you', 'no thanks', 'that is it', 'that is all', 'you got it', 'that would be all', 'that will be all', 'thatll be all', 'thatll be it', 'all done', 'im finished', 'nope', 'nothing else', 'will be it']
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream STARTED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> LOOP FINISHED
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream ENDED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.call_ctrl]: TTS -> b'GOOGLE_RESTART'
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: __init__
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: metadata.InteractionType -> VOICE_SEARCH
+Oct 18 05:20:04 kea-core start.sh[9285]: [IVR._context]: From items ['thats it', 'delivery', 'im done', 'thats all', 'nope', 'no', 'complete', 'this is it', 'thats all', 'exit', 'thats good', 'be all', 'no thank you', 'no thanks', 'that is it', 'that is all', 'you got it', 'that would be all', 'that will be all', 'thatll be all', 'thatll be it', 'all done', 'im finished', 'nope', 'nothing else', 'will be it']
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream STARTED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> LOOP FINISHED
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream ENDED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.call_ctrl]: TTS -> b'GOOGLE_RESTART'
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: __init__
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: metadata.InteractionType -> VOICE_SEARCH
+Oct 18 05:20:04 kea-core start.sh[9285]: [IVR._context]: From items ['thats it', 'delivery', 'im done', 'thats all', 'nope', 'no', 'complete', 'this is it', 'thats all', 'exit', 'thats good', 'be all', 'no thank you', 'no thanks', 'that is it', 'that is all', 'you got it', 'that would be all', 'that will be all', 'thatll be all', 'thatll be it', 'all done', 'im finished', 'nope', 'nothing else', 'will be it']
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream STARTED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> LOOP FINISHED
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream ENDED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.call_ctrl]: TTS -> b'GOOGLE_RESTART'
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: __init__
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: metadata.InteractionType -> VOICE_SEARCH
+Oct 18 05:20:04 kea-core start.sh[9285]: [IVR._context]: From items ['thats it', 'delivery', 'im done', 'thats all', 'nope', 'no', 'complete', 'this is it', 'thats all', 'exit', 'thats good', 'be all', 'no thank you', 'no thanks', 'that is it', 'that is all', 'you got it', 'that would be all', 'that will be all', 'thatll be all', 'thatll be it', 'all done', 'im finished', 'nope', 'nothing else', 'will be it']
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream STARTED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> LOOP FINISHED
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream ENDED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.call_ctrl]: TTS -> b'GOOGLE_RESTART'
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: __init__
+Oct 18 05:20:04 kea-core start.sh[9285]: [speech.STT]: metadata.InteractionType -> VOICE_SEARCH
+Oct 18 05:20:04 kea-core start.sh[9285]: [IVR._context]: From items ['thats it', 'delivery', 'im done', 'thats all', 'nope', 'no', 'complete', 'this is it', 'thats all', 'exit', 'thats good', 'be all', 'no thank you', 'no thanks', 'that is it', 'that is all', 'you got it', 'that would be all', 'that will be all', 'thatll be all', 'thatll be it', 'all done', 'im finished', 'nope', 'nothing else', 'will be it']
+Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream STARTED
+Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0
+
+3.
