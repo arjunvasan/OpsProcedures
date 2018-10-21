@@ -237,10 +237,13 @@ git clone -b <branch> --single-branch <url> --depth <number of commits> #keep nu
 #redis setup
 #Redis needs some keys and fields (hashed on the called to number):
 #The following settings allow the order to proceed (otherwise circles around the menu)
+***Old***
 redis-cli #invoke the client
 HSET kea.store-config:16502636176 query "false"
 HSET kea.store-config:16502636176 playback "true"
 HGETALL kea.store-config:16502636176
+***New***
+The coreGlobals populates the Redis with the store-config from etc/nexmoMenuMap.son
 #Miscellaneous
 #For storing recordings
 mkdir -p  '/home/vv/audio/rx'
