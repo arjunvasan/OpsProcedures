@@ -227,6 +227,8 @@ sudo pip install nexmo
 
 #install pyin
 
+#install jinga2
+sudo pip3 install jinja2
 
 #Steps to create a branch:
 1. In githup just put in a branch in the branch dropdown of the repo.
@@ -242,6 +244,10 @@ redis-cli #invoke the client
 HSET kea.store-config:16502636176 query "false"
 HSET kea.store-config:16502636176 playback "true"
 HGETALL kea.store-config:16502636176
+#setup the recording dir (all calls are saved here and served out to agents)
+#This is the default directory path for nginx to serve static html
+mkdir -p /var/www/html/crx
+
 ***New***
 The coreGlobals populates the Redis with the store-config from etc/nexmoMenuMap.son
 #Miscellaneous
@@ -307,7 +313,7 @@ mkdir -p ~/tempgit
 cd ~/tempgit
 rm -rf core kea tts menus
 ### loop for each of core kea tts menus
-export repo=menus
+export repo=core
 cd ~/tempgit
 git clone https://github.com/arjunvasan/${repo}.git
 #will ask for usercode pwd
@@ -318,13 +324,41 @@ git rebase master #This may result in conflicts..If conflict it switches to an i
 git commit -a -m "master rebasing.." #It should say nothing to commit
 git push #make sure you are in VV branch
 
+############ Conflict resolution ############
+Resolve all conflicts manually, mark them as resolved with
+"git add/rm <conflicted_files>", then run "git rebase --continue".
+You can instead skip this commit: run "git rebase --skip".
+To abort and get back to the state before "git rebase", run "git rebase --abort".
+################################
+git clone -b VV --single-branch https://github.com/arjunvasan/core.git --depth 1
 
 git clone -b VV --single-branch https://github.com/arjunvasan/kea.git --depth 1
 git clone -b VV --single-branch https://github.com/arjunvasan/tts.git --depth 1
 git clone -b VV --single-branch https://github.com/arjunvasan/menus.git --depth 1
 git checkout feature1
 git rebase master
+#########Merging master into newm2 for repo core ###############
+#Concept: checkout and merge locally and checkin VV
+export bName=newm2
+export repo=core
+#On your local (laptop):
+mkdir -p ~/tempgit
+cd ~/tempgit
+rm -rf ~/tempgit/*
+cd ~/tempgit
+git clone https://github.com/arjunvasan/${repo}.git
+#will ask for usercode pwd
+cd ${repo}
+git checkout ${bName}
+git rebase master #This may result in conflicts..If conflict it switches to an intermediate branch and puts the conflict there
+#Resolve any conflicts and continue rebase
+git commit -a -m "master rebasing.." #It should say nothing to commit
+git push #make sure you are in ${bName} branch
 ########### need to work on these ####################
 /var/www/html/nxrx => kea.py
 /var/www/html/tts/tts... =>tts.py (something seems to be recorded here)
 
+#####Note: must use active=vmachina when removing hardcoding of globals
+
+####Remove unused files (or move them to unused folder) to reduce maintenance #####
+1. core/config.py

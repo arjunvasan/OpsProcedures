@@ -1,3 +1,36 @@
+0. A reason why workers go down (in the threading model):
+b'{"start_time":null,"rate":null,"from":"16502636176","to":"ws://138.197.214.202:8005/socket/6b463755-e6bd-47d7-b73a-98022b3b0f18","uuid":"39e6f7ce-c21f-4d63-a3d3-b3da5f0cedbc","conversation_uuid":"CON-676dc9a4-7858-40f8-8685-7af7f2f9f391","status":"answered","direction":"outbound","network":null,"timestamp":"2018-10-22T20:30:26.803Z"}'
+Oct 22 20:30:26 kea-core start.sh[28017]: [2018-10-22 20:30:26 +0000] - (sanic.access)[INFO][174.36.197.202:49304]: POST http://138.197.214.202:8005/nx/event  200 17
+Oct 22 20:30:26 kea-core start.sh[28017]: 20:30:26.916 INFO:
+Oct 22 20:30:27 kea-core start.sh[28017]: 20:30:27.398 ERROR:Task was destroyed but it is pending!
+Oct 22 20:30:27 kea-core start.sh[28017]: source_traceback: Object created at (most recent call last):
+Oct 22 20:30:27 kea-core start.sh[28017]:   File "/usr/local/lib/python3.6/threading.py", line 884, in _bootstrap
+Oct 22 20:30:27 kea-core start.sh[28017]:     self._bootstrap_inner()
+Oct 22 20:30:27 kea-core start.sh[28017]:   File "/usr/local/lib/python3.6/threading.py", line 916, in _bootstrap_inner
+Oct 22 20:30:27 kea-core start.sh[28017]:     self.run()
+Oct 22 20:30:27 kea-core start.sh[28017]:   File "/usr/local/lib/python3.6/threading.py", line 864, in run
+Oct 22 20:30:27 kea-core start.sh[28017]:     self._target(*self._args, **self._kwargs)
+Oct 22 20:30:27 kea-core start.sh[28017]:   File "/usr/local/lib/python3.6/concurrent/futures/thread.py", line 69, in _worker
+Oct 22 20:30:27 kea-core start.sh[28017]:     work_item.run()
+Oct 22 20:30:27 kea-core start.sh[28017]:   File "/usr/local/lib/python3.6/concurrent/futures/thread.py", line 56, in run
+Oct 22 20:30:27 kea-core start.sh[28017]:     result = self.fn(*self.args, **self.kwargs)
+Oct 22 20:30:27 kea-core start.sh[28017]:   File "/home/vv/git/core/orderThread.py", line 214, in processCallinWs
+Oct 22 20:30:27 kea-core start.sh[28017]:     results = loop.run_until_complete(asyncio.gather(*tasks))
+Oct 22 20:30:27 kea-core start.sh[28017]:   File "/home/vv/git/core/orderThread.py", line 27, in audio_in
+Oct 22 20:30:27 kea-core start.sh[28017]:     message = await ws.recv()
+Oct 22 20:30:27 kea-core start.sh[28017]:   File "/usr/local/lib/python3.6/site-packages/websockets/protocol.py", line 333, in recv
+Oct 22 20:30:27 kea-core start.sh[28017]:     self.messages.get(), loop=self.loop)
+Oct 22 20:30:27 kea-core start.sh[28017]:   File "/usr/local/lib/python3.6/asyncio/tasks.py", line 519, in ensure_future
+Oct 22 20:30:27 kea-core start.sh[28017]:     task = loop.create_task(coro_or_future)
+Oct 22 20:30:27 kea-core start.sh[28017]: task: <Task pending coro=<Queue.get() running at /usr/local/lib/python3.6/asyncio/queues.py:155> created at /usr/local/lib/python3.6/asyncio/tasks.py:519>
+Oct 22 20:30:31 kea-core start.sh[28017]: [2018-10-22 20:30:31 +0000] [28024] [DEBUG] KeepAlive Timeout. Closing connection.
+Oct 22 20:30:31 kea-core start.sh[28017]: 20:30:31.908 DEBUG:KeepAlive Timeout. Closing connection.
+Oct 22 20:30:31 kea-core start.sh[28017]: [2018-10-22 20:30:31 +0000] [28028] [DEBUG] KeepAlive Timeout. Closing connection.
+Oct 22 20:30:31 kea-core start.sh[28017]: 20:30:31.915 DEBUG:KeepAlive Timeout. Closing connection.
+Oct 22 20:30:31 kea-core start.sh[28017]: [2018-10-22 20:30:31 +0000] [28028] [DEBUG] KeepAlive Timeout. Closing connection.
+Oct 22 20:30:31 kea-core start.sh[28017]: 20:30:31.916 DEBUG:KeepAlive Timeout. Closing connection.
+
+
 1. File seems to be opened for read before creation:
 
 Oct 17 04:41:03 kea-core start.sh[30879]: 04:41:03.739 INFO:
@@ -94,3 +127,15 @@ Oct 18 05:20:04 kea-core start.sh[9285]: [audio.STT]: >> Audio Stream STARTED
 Oct 18 05:20:04 kea-core start.sh[9285]: [APP.audio_out]: Typewriter RESET silent -> 0
 
 3.
+Merge issues:
+Auto-merging util.py
+CONFLICT (content): Merge conflict in util.py
+Auto-merging lang.py
+CONFLICT (add/add): Merge conflict in lang.py
+Auto-merging ivr.py
+CONFLICT (content): Merge conflict in ivr.py
+Auto-merging config.py
+CONFLICT (add/add): Merge conflict in config.py
+Auto-merging app.py
+CONFLICT (content): Merge conflict in app.py
+
