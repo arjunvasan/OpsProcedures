@@ -1,3 +1,39 @@
+======================== On Debug setup ================
+Overview: Problem with testing is physically making a call etc. The objective is to have a good debugging setup and get a call thru and logs gathered in < 30 seconds. The following setup manages that.
+
+One Good debug setup:
+1. Have four terminal windows open (I use terminator):
+    3 on the keaivr
+    1 for local desktop
+
+2. Setup and run the robocall on another window (I use pycharm => I can see the logs of the robocall on the pycharm console).
+
+3. Use the 3 terminals on keaivr as follows:
+    a. One for modifying/stopping/starting the keaivr (use systemctl ..)
+    b. One for viewing the logs (use journalctl
+    c. One for peeklog (or anything else)
+
+4. Use the terminal on the local desktop for:
+    a. restarting the robocalls (curl localhost:8110/startRobocall). This will make call and you can view the logs as indicated above in 3.
+    b. scp the audio file from keaivr and play it. (you-Arjun are using a website, I use the command line for now).
+
+
+
+======================== On worker Dying ===============
+-1. One good reason why workers go down is errors in the async modules (i.e. call_ctrl, audio_in, audio_out). These errors do not show up easily. They show up when we display the results of the 'gather' (in app.py => nexmo_audio, which has the gather like:
+    results = await asyncio.gather(
+        audio_in(ws), call_ctrl(ws), audio_out(ws),
+        return_exceptions=True)
+
+    print(f"[APP.websocket]: {ws.order.caller} -> {ws.order.store}", results)
+    #print(results)
+
+While the error may occur in one async process (which returns error), the other processes will continue.
+How to handle this error?
+Some thoughts:
+1. wrap each async in a try/except block and log the errors and terminate all the async blocks with a flag.
+========================== End new material ==============
+
 0. A reason why workers go down (in the threading model):
 b'{"start_time":null,"rate":null,"from":"16502636176","to":"ws://138.197.214.202:8005/socket/6b463755-e6bd-47d7-b73a-98022b3b0f18","uuid":"39e6f7ce-c21f-4d63-a3d3-b3da5f0cedbc","conversation_uuid":"CON-676dc9a4-7858-40f8-8685-7af7f2f9f391","status":"answered","direction":"outbound","network":null,"timestamp":"2018-10-22T20:30:26.803Z"}'
 Oct 22 20:30:26 kea-core start.sh[28017]: [2018-10-22 20:30:26 +0000] - (sanic.access)[INFO][174.36.197.202:49304]: POST http://138.197.214.202:8005/nx/event  200 17

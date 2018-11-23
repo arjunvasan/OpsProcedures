@@ -114,7 +114,7 @@ git clone https://github.com/arjunvasan/tts.git
 or
 git clone -b VV --single-branch https://github.com/arjunvasan/kea.git --depth 1
 git clone -b VV --single-branch https://github.com/arjunvasan/menus.git --depth 1
-git clone -b VV --single-branch https://github.com/arjunvasan/core.git --depth 1
+git clone -b newm3 --single-branch https://github.com/arjunvasan/core.git --depth 1
 git clone -b VV --single-branch https://github.com/arjunvasan/tts.git --depth 1
 
 #install redis
@@ -362,3 +362,28 @@ git push #make sure you are in ${bName} branch
 
 ####Remove unused files (or move them to unused folder) to reduce maintenance #####
 1. core/config.py
+
+
+############ nexmo key ##################
+This needs to be generated for each node:
+The three values obtained for kea_core:
+nexmo_app: c07cb2a2-b093-4425-a664-a349c567baf0
+NX_SECRET: 00caa331
+nexmo_key => a key file that nexmo provides (should be used when creating the nexmo_client)
+This is specific by host
+
+############ ngrok credentials ##########
+arjun.vasan@gmail.com/vasanarjun
+auth token:5okmAPLhb45mucADcMrbu_rB4oHFBJ25anGrqcWn3u
+ngrok setup for port 8110:
+./ngrok http 8110 => gives public URL like
+https://07991eb7.ngrok.io
+
+########### redis hints ############
+redis-cli
+get <key> or keys <key-pattern>
+#Ex:list all order keys
+keys *order*
+get kea/orders:189c6a50-cad3-4efe-90a2-33b73147c004
+#remove keys in <key-pattern>
+redis-cli --scan --pattern kea/orders:* | xargs redis-cli del
