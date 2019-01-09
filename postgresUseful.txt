@@ -1,0 +1,37 @@
+
+    sudo apt-get install psql
+
+    psql postgres://kea_db_admin:UcPs59X7bY26xnge@kea-main.cluster-cylpj0rwkwcv.us-west-2.rds.amazonaws.com/keacloud_dev
+    \list #list databases
+    \dt #list tables
+    select count(*) from billings;
+
+    select distinct created_at from billings;
+    select * from billings
+
+    #adding seconds to timestamp (shown for a few records which have processing_time = 108
+    select created_at,processing_time,created_at + processing_time * INTERVAL '1 second' as end_time from billings b where processing_time = 108;
+
+    #Using a temp table
+    create table TempStartTimes as select distinct created_at as start_time from billings; # Has all the start times
+    drop table TempStartTimes; #drop it after you finish..
+
+    #find a query at the first startTime
+
+    select t.start_time as t,created_at as start_time, created_at + processing_time * INTERVAL '1 second' as end_time from billings b
+     inner join TempStartTimes t on b.created_at <= t.start_time
+     and (b.created_at + b.processing_time * INTERVAL '1 second') >=t.start_time;
+
+     #find count(*) - simultaneous calls at t
+
+     select t.start_time as t,count(*) as NoOfConcurrentCalls from billings b
+     inner join TempStartTimes t on b.created_at <= t.start_time
+     and (b.created_at + b.processing_time * INTERVAL '1 second') >=t.start_time
+     group by t;
+
+     #find calls at a specific time
+     select t.start_time as t,created_at as start_time, created_at + processing_time * INTERVAL '1 second' as end_time
+     ,from_number from billings b
+     inner join TempStartTimes t on b.created_at <= t.start_time
+     and (b.created_at + b.processing_time * INTERVAL '1 second') >=t.start_time
+     where t.start_time = to_timestamp('2018-12-08 21:12:38.384','YYYY-MM-DD HH24:MI:SS.MS');

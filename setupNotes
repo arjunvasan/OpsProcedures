@@ -203,7 +203,7 @@ sudo pip3 install --upgrade google-cloud-language
 sudo pip3 install -t lib/ --upgrade google-api-python-client
 sudo pip3 install -t lib/ --upgrade google-cloud
 sudo pip3 install --upgrade google-cloud-texttospeech
-sudo pip3 install --upgrade webrtcvad
+sudo pip3 install --upgrade webrtcvad`
 sudo pip3 install --upgrade aioredis
 sudo pip3 install jose #some package for signing!
 sudp pip3 install crypto #not sure if this is needed
@@ -234,6 +234,7 @@ sudo pip3 install jinja2
 1. In githup just put in a branch in the branch dropdown of the repo.
 #check out the branch
 git clone -b <branch> --single-branch <url> --depth <number of commits> #keep number of commits low (1 if you just want the latest)
+ex: git clone -b newm4 --single-branch https://github.com/arjunvasan/core.git --depth 1
 
 #Steps to run the application
 #redis setup

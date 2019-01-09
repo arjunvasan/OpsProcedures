@@ -1,3 +1,10 @@
+======================== Temp ==========================
+1. Sensor (after the air filter sitting on top of the pipe)
+2. Leak in a pipe (Connect the pipe after the airflow sensor (square box with a bulb inside), and spray soapy water around the pipes , couple with 3.5 inch pvc cap and make a hole and put the tape for 5-10 lbs)
+3. Error code PO171
+4. Massairflow sensor cleaner from Autozone
+OBD 2 is in trunk
+
 ======================== On Debug setup ================
 Overview: Problem with testing is physically making a call etc. The objective is to have a good debugging setup and get a call thru and logs gathered in < 30 seconds. The following setup manages that.
 
