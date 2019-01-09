@@ -1,5 +1,5 @@
 
-    sudo apt-get install psql
+    sudo apt-get install postgresql-client-10
 
     psql postgres://kea_db_admin:UcPs59X7bY26xnge@kea-main.cluster-cylpj0rwkwcv.us-west-2.rds.amazonaws.com/keacloud_dev
     \list #list databases
