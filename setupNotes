@@ -367,6 +367,16 @@ git push #make sure you are in ${bName} branch
 
 ############ nexmo key ##################
 This needs to be generated for each node:
+Generation process:
+1. URL: Login to https://dashboard.nexmo.com => Voice => your applications
+Look for a Name that will have your node address on it (either ip or DNS)
+(you can also create a new application and put a new name and associate it with the node address)
+The URLS for event and answer should point to the node address
+2. Generate a private key by using the edit screen buttons
+3. Name the key <hostname>_nexmo.key
+4. copy to auth folder on tht node.
+
+
 The three values obtained for kea_core:
 nexmo_app: c07cb2a2-b093-4425-a664-a349c567baf0
 NX_SECRET: 00caa331
